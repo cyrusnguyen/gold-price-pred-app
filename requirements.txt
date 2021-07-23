@@ -4,3 +4,6 @@ matplotlib==3.2.2
 seaborn==0.10.1
 scikit-learn==0.23.1
 streamlit==0.71.0
+statsmodels
+tensorflow
+tensorflow-gpu==2.2.0
