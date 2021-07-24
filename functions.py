@@ -254,7 +254,7 @@ if True:
         else:
             #ARIMA
             arima_results = list()
-            arima_results = np.round(arima_model.forecast(steps=5)[0],1)
+            arima_results = np.round(arima_model.forecast(steps=3)[0],1)
 
             #LSTM
             lstm_results = list()
@@ -300,8 +300,8 @@ if True:
 
                 i = i +1
 
-        # for i in range(len(arima_results)):
-        #     lstm_results[i] = arima_results[i]
+        for i in range(len(arima_results)):
+            lstm_results[i] = arima_results[i]
         predictions = lstm_results
         return predictions
     
@@ -338,304 +338,27 @@ if True:
         st.write(figure)
         return actual, predicted
     
-    def gioi_tinh():
-        #Giới tính: Nam, Nữ --> sex_male
-        gender=st.radio('- *Giới tính người đó:',['Nam','Nữ'])
-        if gender=='Nữ':
-            SEX_MALE=0
-        else:
-            SEX_MALE=1
-        return gender,SEX_MALE
-
-    def tuoi():
-        #Tuổi --> 0-80
-        age=st.text_input('- *Nhập tuổi:')
-        AGE=1
-        if age!='':
-            if age.isdigit():
-                if int(age)>=1 and int(age)<=100:
-                    st.success('Ok!')
-                    AGE=int(age)
-                else:
-                    st.warning('Tuổi nằm trong khoảng từ 1 đến 100')
-            else:
-                st.warning('Chỉ nhập số!')
-        else:
-            st.write('Chỉ nhập số')
-        return AGE
-
-    def sibsp():
-        #Có vợ/chồng đi cùng không
-        #Có người thân đi cùng không
-        st.write('- *Đánh dấu tích nếu có')
-        VO_CHONG=st.checkbox('Có vợ/chồng đi cùng')
-        nguoi_than=st.checkbox('Có anh chị em ruột đi cùng')
-        if nguoi_than==True:
-            NGUOI_THAN=st.slider('*Mấy người đi cùng:',min_value=0,max_value=8,step=1)
-        else:
-            NGUOI_THAN=0
-        return VO_CHONG,NGUOI_THAN
-
-    def parch():
-        #Bố mẹ có đi cùng không
-        #Có dẫn trẻ em đi cùng không
-        BO=st.checkbox('Có bố đi cùng')
-        ME=st.checkbox('Có mẹ đi cùng')
-        tre_em=st.checkbox('Có dẫn trẻ em đi cùng')
-        if tre_em==True:
-            TRE_EM=st.slider('*Mấy trẻ em đi cùng:',min_value=0,max_value=8,step=1)
-        else:
-            TRE_EM=0
-        return BO,ME,TRE_EM
-
-    def pclass():
-        #Mua vé thuộc hạng nào
-        ve=st.radio('- *Mua vé thuộc hạng nào:',['1st','2nd','3rd'])
-        if ve=='1st':
-            PCLASS=1
-        elif ve=='2nd':
-            PCLASS=2
-        else:
-            PCLASS=3
-        return ve,PCLASS
-
-    def fare():
-        #Giá vé bao nhiêu (Tính theo tiền đô) --> 0-512
-        FARE=st.slider('- *Giá vé bao nhiêu:',min_value=0,max_value=512,step=1)
-        return FARE
-
-    def Embarked():
-        #Lên tàu ở cảng nào
-            #Cảng Southampton --> [0,1]
-            #Cảng Queenstown  --> [1,0]
-            #Cảng Cherbourg   --> [0,0]
-        embarked=st.selectbox('- *Lên tàu ở cảng nào:',
-        ['Cảng Queenstown','Cảng Cherbourg','Cảng Southampton'])
-        if embarked=='Cảng Queenstown':
-            EMBARKED_Q=1
-            EMBARKED_S=0
-        elif embarked=='Cảng Cherbourg':
-            EMBARKED_Q=0
-            EMBARKED_S=0
-        else:
-            EMBARKED_Q=0
-            EMBARKED_S=1
-        return embarked,EMBARKED_Q,EMBARKED_S
-
-    def Name():
-        # Họ tên nếu có
-        name=st.text_input('- Họ tên (Nếu có):')
-        return name
-
-    def Quan_he():
-        #Mối quan hệ với người dùng
-        quan_he=st.radio('- Người đó có quan hệ gì với bạn',
-        ['Là chính bạn','Người quen/bạn bè...','Không có quan hệ gì'])
-        return quan_he
-
-    def nhap_thong_tin():
-        gender,SEX_MALE=gioi_tinh()
-        AGE=tuoi()
-
-        VO_CHONG,NGUOI_THAN=sibsp()
-        #--> Cộng tổng lại xem có bao nhiêu người --> sibsp (0-8)
-        SIBSP=VO_CHONG+NGUOI_THAN
-
-        BO,ME,TRE_EM=parch()
-        #--> Cộng tổng lại xem có bao nhiêu người --> parch (0-9)
-        PARCH=BO+ME+TRE_EM
-
-        ve,PCLASS=pclass()
-        FARE=fare()
-        embarked,EMBARKED_Q,EMBARKED_S=Embarked()
-
-        #Tên
-        name=Name()
-        #Mối quan hệ
-        quan_he=Quan_he()
-        return gender,SEX_MALE,AGE,VO_CHONG,NGUOI_THAN,\
-            SIBSP,BO,ME,TRE_EM,PARCH,ve,PCLASS,FARE,embarked,\
-            EMBARKED_Q,EMBARKED_S,name,quan_he
-    ############################
-
+    
     ############################
     def thong_tin_huu_ich():
         list_a=['Bạn có biết: ','Có thể bạn chưa biết: ','Thông tin hữu ích: ','Sự thật thú vị rằng: ']
-        list_b=['Trên chuyến tàu Titanic, chỉ có khoảng 20% nam giới sống sót và nữ lên tới 75%!',
-                'Giới tính quyết định đến 25% trong việc dự đoán của model',
-                'Tuổi quyết định đến tận 32% trong việc dự đoán và chiếm vị trí Thuộc tính quan trọng nhất!!',
-                'Giá vé chiếm tận 25% độ quan trọng khi dự đoán!!',
-                'Chỉ có khoảng 6% hành khách mua vé với giá trên 100$ và 70% trong số họ sống sót!',
-                'Nếu bạn là nam và bạn chịu mua vé với giá trên 100$, bạn có tới tận 32% cơ hội sống sót!!!',
-                'Thảm họa Titanic đã cướp đi sinh mạng gần 2/3 số hành khách trên tàu chỉ 1/3 số hành khách sống sót',
-                'Đa số hành khách mua vé với giá dưới 100$, và chỉ 35% trong số họ sống sót',
-                'Nếu bạn là nam và bạn mua vé rẻ (dưới 100$), xin chia buồn, bạn chỉ có khoảng 18% cơ hội sống sót :(',
-                'Khoảng 60% trẻ em dưới 10 tuổi và khoảng 45% người già trong độ tuổi 50-60 được cứu sống',
-                'Độ tuổi từ 20 đến 45 tuổi là bấp bênh nhất, chỉ có 35% cơ hội sống sót',
-                'Nếu bạn là nam và tuổi của bạn trong khoảng 20 đến 40, bạn sẽ phải 1 chọi 6 nếu muốn có cơ hội sống sót :(',
-                'Nhóm nữ có cơ hội sống sót thấp nhất theo phân tích là nhóm nữ có độ tuổi 25-30, mua vé dưới 100$ với 63% cơ hội sống sót',]
+        list_b=['Theo WGC, tính đến cuối năm 2019 loài người đã khai thác gần 200.000 tấn vàng',
+                'Giá trị thị trường hiện tại của tất cả vàng hiện có trên thế giới là 8 nghìn tỷ đô la Mỹ.',
+                'Mỗi dặm khối nước biển chứa trung bình 25 tấn vàng.',
+                'Gần 50% tổng số vàng được khai thác từ Witwatersrand ở Nam Phi.',
+                'Tổng lượng vàng được khai thác trong lịch sử loài người hiện được ghi lại là khoảng 161,000 tấn.',
+                'Thời gian dự đoán càng lâu thì độ chính xác của model càng giảm!!',
+                'Các model dự đoán phải có cùng tần suất dữ liệu.',
+                'Từ “vàng” (gold) bắt nguồn từ từ “geolu” trong tiếng Anh cổ, có nghĩa là màu vàng.',
+                'Nhà đầu tư thường mua vàng để đầu tư dài hạn.',
+                'Vàng đã tăng giá trị khoảng 500% trong vòng 15 năm qua.',
+                'Theo WGC, lượng vàng chưa khai thác trên thế giới ước tính chỉ còn khoảng 54.000 tấn.',
+                'Gần như không thể phá hủy nên vàng thường được nấu chảy, tinh chế và tái sử dụng.',
+                '46 tấn vàng được sử dụng hàng năm để trám răng.',
+                'Vàng đã tăng giá trị khoảng 500% trong vòng 15 năm qua.']
         return list_a[int(np.random.randint(len(list_a)))]+list_b[int(np.random.randint(len(list_b)))]
 
-    def speak_sorry(name,gender,quan_he):
-        list_sorry_1=['Rất tiếc! ','Xin chia buồn! ','Tin buồn! ']
-        list_sorry_2=[' không thể sống sót sau vụ Titanic :(',' sẽ hi sinh anh dũng :(',' sẽ ra đi :(']
-        if quan_he=='Là chính bạn':
-            speak=list_sorry_1[int(np.random.randint(len(list_sorry_1)))]+'Bạn'+list_sorry_2[int(np.random.randint(len(list_sorry_2)))]
-        else:
-            if name=='':
-                if quan_he=='Người quen':
-                    if gender=='Nam':
-                        list_name=['Người bạn quen biết','Họ','Anh ấy']
-                    else:
-                        list_name=['Người bạn quen biết','Họ','Cô ấy']
-                    speak=list_sorry_1[int(np.random.randint(len(list_sorry_1)))]+list_name[int(np.random.randint(len(list_name)))]+list_sorry_2[int(np.random.randint(len(list_sorry_2)))]
-                else:
-                    list_sorry_2=[' không thể sống sót sau vụ Titanic :(',' rất khó để sống sót :(']
-                    if gender=='Nam':
-                        list_name=['Người này','Hành khách này','Họ','Anh ấy']
-                    else:
-                        list_name=['Người này','Hành khách này','Họ','Cô ấy']
-                    speak=list_sorry_1[int(np.random.randint(len(list_sorry_1)))]+list_name[int(np.random.randint(len(list_name)))]+list_sorry_2[int(np.random.randint(len(list_sorry_2)))]
-            else:
-                speak=list_sorry_1[int(np.random.randint(len(list_sorry_1)))]+name.capitalize()+list_sorry_2[int(np.random.randint(len(list_sorry_2)))]
-
-        return speak
-
-    def speak_good(name,gender,quan_he):
-        list_good_1=['Rất may mắn! ','Tuyệt vời! ','Tin tốt! ']
-        list_good_2=[' sẽ sống sót sau vụ Titanic!',' sẽ sống sót trở về!',' sẽ còn nguyên vẹn trở về sau chuyến đi!']
-        if quan_he=='Là chính bạn':
-            speak=list_good_1[int(np.random.randint(len(list_good_1)))]+'Bạn'+list_good_2[int(np.random.randint(len(list_good_2)))]
-        else:
-            if name=='':
-                if quan_he=='Người quen':
-                    if gender=='Nam':
-                        list_name=['Người bạn quen biết','Họ','Anh ấy']
-                    else:
-                        list_name=['Người bạn quen biết','Họ','Cô ấy']
-                    speak=list_good_1[int(np.random.randint(len(list_good_1)))]+list_name[int(np.random.randint(len(list_name)))]+list_good_2[int(np.random.randint(len(list_good_2)))]
-                else:
-                    list_good_2=[' có khả năng sống sót cao trong vụ Titanic!',' có thể sống sót trở về!']
-                    if gender=='Nam':
-                        list_name=['Người này','Hành khách này','Họ','Anh ấy']
-                    else:
-                        list_name=['Người này','Hành khách này','Họ','Cô ấy']
-                    speak=list_good_1[int(np.random.randint(len(list_good_1)))]+list_name[int(np.random.randint(len(list_name)))]+list_good_2[int(np.random.randint(len(list_good_2)))]
-            else:
-                speak=list_good_1[int(np.random.randint(len(list_good_1)))]+name.capitalize()+list_good_2[int(np.random.randint(len(list_good_2)))]
-        return speak
-
-    def thong_bao(model,gender,SEX_MALE,AGE,VO_CHONG,NGUOI_THAN,
-                SIBSP,BO,ME,TRE_EM,PARCH,ve,PCLASS,FARE,embarked,
-                EMBARKED_Q,EMBARKED_S,name,quan_he):
-        result=model.predict([[PCLASS,SEX_MALE,AGE,SIBSP,PARCH,FARE,EMBARKED_Q,EMBARKED_S]])
-        if quan_he=='Là chính bạn':
-            st.subheader('Bạn đã chọn:')
-            st.write('- Giới tính của bạn:',gender)
-            st.write('- Tuổi của bạn:',AGE,'tuổi')
-            if VO_CHONG==0 and NGUOI_THAN==0 and BO==0 and ME==0 and TRE_EM==0:
-                st.write('- Bạn đi một mình')
-            else:
-                if VO_CHONG==1:
-                    st.write('- Có vợ/chồng đi cùng')
-                else:
-                    pass
-                if NGUOI_THAN!=0:
-                    st.write('- Có',NGUOI_THAN,'anh chị em ruột đi cùng')
-                else:
-                    pass
-                if TRE_EM!=0:
-                    st.write('- Có dẫn theo',TRE_EM,'trẻ em đi cùng')
-                else:
-                    pass
-                if BO==1 and ME==1:
-                    st.write('- Bạn đi cùng bố mẹ')
-                else:
-                    if BO==1:
-                        st.write('- Bạn đi cùng bố')
-                    elif ME==1:
-                        st.write('- Bạn đi cùng mẹ')
-                    else:
-                        pass
-            st.write('- Mua vé hạng',ve,'với giá tiền',FARE,'đô và lên tàu ở',embarked)
-            st.write('...')
-            if result==0:
-                st.write('-->',speak_sorry(name,gender,quan_he))
-            else:
-                st.write('-->',speak_good(name,gender,quan_he))
-        else:
-            st.subheader('Người đó có những đặc điểm sau:')
-            st.write('- Giới tính:',gender)
-            st.write('- Tuổi:',AGE,'tuổi')
-            if name=='':
-                if VO_CHONG==0 and NGUOI_THAN==0 and BO==0 and ME==0 and TRE_EM==0:
-                    st.write('- Người đó đi một mình')
-                else:
-                    if VO_CHONG==1:
-                        st.write('- Có vợ/chồng đi cùng')
-                    else:
-                        pass
-                    if NGUOI_THAN!=0:
-                        st.write('- Có',NGUOI_THAN,'anh chị em ruột đi cùng')
-                    else:
-                        pass
-                    if TRE_EM!=0:
-                        st.write('- Có dẫn theo',TRE_EM,'trẻ em đi cùng')
-                    else:
-                        pass
-                    if BO==1 and ME==1:
-                        st.write('- Người đó đi cùng bố mẹ')
-                    else:
-                        if BO==1:
-                            st.write('- Người đó đi cùng bố')
-                        elif ME==1:
-                            st.write('- Người đó đi cùng mẹ')
-                        else:
-                            pass
-                st.write('- Mua vé hạng',ve,'với giá tiền',FARE,'đô và lên tàu ở',embarked)
-                st.write('...')
-            else:
-                if VO_CHONG==0 and NGUOI_THAN==0 and BO==0 and ME==0 and TRE_EM==0:
-                    st.write('-',name.capitalize(),'đi một mình')
-                else:
-                    if VO_CHONG==1:
-                        st.write('- Có vợ/chồng đi cùng')
-                    else:
-                        pass
-                    if NGUOI_THAN!=0:
-                        st.write('- Có',NGUOI_THAN,'anh chị em ruột đi cùng')
-                    else:
-                        pass
-                    if TRE_EM!=0:
-                        st.write('- Có dẫn theo',TRE_EM,'trẻ em đi cùng')
-                    else:
-                        pass
-                    if BO==1 and ME==1:
-                        st.write('-',name.capitalize(),'đi cùng bố mẹ')
-                    else:
-                        if BO==1:
-                            st.write('-',name.capitalize(),'đi cùng bố')
-                        elif ME==1:
-                            st.write('-',name.capitalize(),'đi cùng mẹ')
-                        else:
-                            pass
-                st.write('-',name.capitalize(),'mua vé hạng',ve,'với giá tiền',FARE,'đô và lên tàu ở',embarked)
-                st.write('...')
-            if result==0:
-                st.write('-->',speak_sorry(name,gender,quan_he))
-            else:
-                st.write('-->',speak_good(name,gender,quan_he))
-        return
-    ############################
-
-    ############################
-    def xu_ly_du_lieu_2(X):
-        X_pre=X.interpolate()
-        X_pre=X_pre.drop(['cabin','home.dest'],axis=1)
-        X_pre=X_pre.dropna()
-        X_pre=pd.get_dummies(X_pre,columns=['sex','embarked'],drop_first=True)
-        X_pre=X_pre[['pclass','sex_male','age','sibsp','parch','fare','embarked_Q','embarked_S']]
-        return X_pre
+    
 
     def download_csv(df):
         """
