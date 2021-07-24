@@ -74,6 +74,8 @@ if True:
                     # Download dữ liệu
                     st.subheader('3. Tải dữ liệu đã xử lý')
                     ft.download_csv(ss.data)
+                    
+                    st.write(ft.thong_tin_huu_ich())
 
             else:
                 image = Image.open('image/gold.jpg')
@@ -93,6 +95,8 @@ if True:
                     #Vẽ biểu đồ
                     st.subheader('2. Vẽ biểu đồ')
                     ft.ve_bieu_do(train_data, test_data, arima_predictions, arima_error, lstm_predictions, lstm_error)
+                    
+                    st.write(ft.thong_tin_huu_ich())
                 else:
                     image = Image.open('image/gold.jpg')
                     st.image(image, caption=None,use_column_width=True,width=None)
@@ -121,6 +125,9 @@ if True:
                         new_data = new_data.append(temp_data)
                         st.write(new_data.head())
                         ft.download_csv(new_data)
+                        
+                        
+                        st.write(ft.thong_tin_huu_ich())
 
                         
                     else:
@@ -166,6 +173,8 @@ if True:
                             new_data['predicted'] = predicted
                             st.write(new_data.head())
                             ft.download_csv(new_data)
+                            
+                            st.write(ft.thong_tin_huu_ich())
                     else:
                         image = Image.open('image/timeseries.jpg')
                         st.image(image, caption=None,use_column_width=True,width=None)
