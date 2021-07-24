@@ -21,20 +21,11 @@ if True:
         import os.path
         from os import path
 
-        from tensorflow.keras.models import Sequential
-        from tensorflow.keras.layers import Dense, LSTM, Dropout, Bidirectional, Activation
-        from tensorflow.keras import backend as K
         from tensorflow.keras.models import load_model
         from sklearn.preprocessing import MinMaxScaler
         import warnings
         warnings.filterwarnings("ignore")
 
-        from contextlib import contextmanager
-        from io import StringIO
-        from streamlit.report_thread import REPORT_CONTEXT_ATTR_NAME
-        from threading import current_thread
-        import streamlit as st
-        import sys
 
     
     def load_model_arima():
@@ -73,7 +64,7 @@ if True:
 
     def upload_file(file_data_path='./data/gold_price.json'):
         file_data = st.file_uploader("Upload file csv hoặc json tại đây (phải có cột 'date' và 'price')", type=([".csv", ".json"]))
-        # st.markdown("""Nếu không có mẫu, bạn có thể tham khảo data <a href="https://github.com/Thienlong1312/titanic-pred-app/tree/main/data/">tại đây</a>.""", unsafe_allow_html=True,)
+        st.markdown("""Nếu không có mẫu, bạn có thể tham khảo data <a href="https://github.com/cyrusnguyen/gold-price-pred-app/tree/main/data">tại đây</a>.""", unsafe_allow_html=True,)
 
         if st.button('Hoặc đơn giản nhấn vào đây!'):
             file_data=file_data_path
@@ -139,24 +130,20 @@ if True:
         train_data, test_data = data[0:int(len(data)*0.9)], data[int(len(data)*0.9):]
         train_ar = train_data.price.values
         test_ar = test_data.price.values
-        history = [x for x in train_ar]
-
-
         arima_predictions = list()
+
         for t in range(len(test_ar)):
             # model = ARIMA(history, order=(7,1,0)) 
             # arima_model = model.fit(disp=0)
             output = arima_model.forecast()
             yhat = output[0]
             arima_predictions.append(yhat)
-            obs = test_ar[t]
-            history.append(obs)
 
         arima_error = mean_squared_error(test_ar, arima_predictions)
         arima_root_error = np.sqrt(arima_error)
         st.write('Arima Testing Mean Squared Error: %.3f' % arima_error)
         st.write('Arima Testing Root Mean Squared Error: %.3f' % arima_root_error)
-        st.write(arima_model.summary())
+        st.write(pd.read_html(arima_model.summary().tables[1].as_html(), header=0, index_col=0)[0])
 
         # LSTM Model
         st.header("LSTM")
