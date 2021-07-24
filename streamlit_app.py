@@ -1,6 +1,3 @@
-from functions import plot_comparison, plot_future_results
-
-
 if True:
     if True: #import libraries
         import streamlit as st
@@ -115,7 +112,7 @@ if True:
                         
                         results = ft.future_prediction(ss.data, arima_model, lstm_model, num_predictions)
                         future_state.future_prediction = results
-                        plot_future_results(ss.data, future_state.future_prediction)
+                        ft.plot_future_results(ss.data, future_state.future_prediction)
 
                         st.subheader("2. Tải dữ liệu đã so sánh:")
                         new_data = ss.data.copy()
@@ -163,7 +160,7 @@ if True:
                                 st.write(data.head())
                             else: print("Dữ liệu xử lý bị lỗi")
                             st.subheader('3. So sánh giá dự đoán và giá thực')  
-                            actual, predicted = plot_comparison(data, future_state.future_prediction)   
+                            actual, predicted = ft.plot_comparison(data, future_state.future_prediction)   
                             st.subheader("4. Tải dữ liệu đã so sánh:")
                             new_data = actual.copy()
                             new_data['predicted'] = predicted
@@ -181,38 +178,7 @@ if True:
                 st.header("Vui lòng DỰ ĐOÁN (III.) trước khi so sánh kết quả")
                 image = Image.open('image/gold.jpg')
                 st.image(image, caption=None,use_column_width=True,width=None)
-        # else: # Gán nhãn và lưu file
-        #     #Load dữ liệu
-        #     st.subheader('1. Load dữ liệu có chứa label')
-
-        #     file_data = st.file_uploader("Upload file csv hoặc json tại đây (phải có cột 'date' và 'price')", type=([".csv", ".json"]))
-        #     # st.markdown("""Nếu không có mẫu, bạn có thể tham khảo data <a href="https://github.com/Thienlong1312/titanic-pred-app/tree/main/data/">tại đây</a>.""", unsafe_allow_html=True,)
-        #     if st.button('Hoặc đơn giản nhấn vào đây!'):
-        #         file_data='./data/gold_price.json'
-        #     if file_data:
-        #         X=pd.read_csv(file_data)
-        #         if 'survived' in X.columns:
-        #             st.write('Dữ liệu đã có nhãn, vui lòng chọn dữ liệu khác')
-                
-        #         else:
-        #             #Xử lý dữ liệu
-        #             st.subheader('2. Xử lý dữ liệu')
-        #             st.write('Chưa được lập trình!')
-
-        #             #Gán nhãn cho dữ liệu
-        #             st.subheader('3. Gán nhãn cho dữ liệu')
-        #             st.write('Chưa được lập trình!')
-
-        #             #Kiểm tra xem có dữ liệu nào model không đoán được
-                    
-
-        #             #Tải dữ liệu xuống
-        #             st.write('Chưa được lập trình!')
-        #     else:
-        #         image = Image.open('image/titanic_image_2.jpg')
-        #         st.image(image, caption=None,use_column_width=True,width=None)
-        # return
-
+        
     if __name__=='__main__':
         main()
 
